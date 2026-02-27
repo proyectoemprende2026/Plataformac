@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FondeoEmprende2026 - Control Operativo</title>
-    
+
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
@@ -22,8 +22,6 @@
         .btn-3d:hover { background: #006b57; color: white; }
         .section-hidden { display: none !important; }
         .table-admin { font-size: 0.85rem; }
-
-        /* ── Modal overlay ── */
         .modal-overlay {
             display: none; position: fixed; inset: 0;
             background: rgba(0,0,0,0.55); z-index: 9999;
@@ -36,18 +34,13 @@
             animation: popIn 0.2s ease;
         }
         @keyframes popIn { from { transform: scale(0.85); opacity: 0; } to { transform: scale(1); opacity: 1; } }
-
-        /* ── Partidas summary badge ── */
         .partida-badge { display:inline-block; background:#e8f5e9; color:#2e7d32; border-radius:20px; padding:3px 10px; font-size:0.78rem; margin:2px; }
-
-        /* ── Saldo coloring ── */
         .saldo-ok   { color: #004d40; }
         .saldo-warn { color: #e65100; }
     </style>
 </head>
 <body>
 
-<!-- ══════════════════════════════════════════════════ NAVBAR ══ -->
 <nav class="navbar navbar-dark shadow">
     <div class="container d-flex justify-content-between">
         <a class="navbar-brand" href="https://proyectoemprende2026.github.io/Principal/">
@@ -55,15 +48,15 @@
             <span class="fw-bold text-white">FondeoEmprende2026</span>
         </a>
         <div>
-            <button onclick="navegar('pantalla-login')" class="btn btn-outline-warning btn-sm me-2">YA TENGO PIN</button>
-            <button onclick="accesoAdmin()" class="btn btn-sm btn-light">ADMIN</button>
+            <button type="button" onclick="navegar('pantalla-login')" class="btn btn-outline-warning btn-sm me-2">YA TENGO PIN</button>
+            <button type="button" onclick="accesoAdmin()" class="btn btn-sm btn-light">ADMIN</button>
         </div>
     </div>
 </nav>
 
 <div class="container mt-4 pb-5">
 
-    <!-- ═══════════════════════════════════════ REGISTRO ══ -->
+    <!-- REGISTRO -->
     <div id="pantalla-registro" class="row justify-content-center">
         <div class="col-md-6">
             <div class="card card-custom p-4">
@@ -72,54 +65,51 @@
                 <input type="text" id="proy-nombre" class="form-control mb-2" placeholder="Nombre del proyecto">
                 <label class="small fw-bold">Proyecto resumido</label>
                 <input type="url" id="proy-link" class="form-control mb-2" placeholder="https://drive.google.com/... (PDF del proyecto)">
-
-                <!-- Saldo inicial configurable (Sugerencia C) -->
                 <div class="input-group mb-3">
                     <span class="input-group-text">$</span>
                     <input type="number" id="reg-saldo" class="form-control" placeholder="Saldo inicial (ej. 13500000)" value="13500000">
                     <span class="input-group-text">MXN</span>
                 </div>
-
                 <div class="p-3 bg-light rounded mb-3 text-start">
                     <p class="small fw-bold mb-2">Añadir partidas de presupuesto:</p>
                     <div class="input-group mb-2">
                         <input type="text" id="partida-input" class="form-control" placeholder="Ej: Infraestructura">
-                        <button type="button" onclick="addPartida()" class="btn btn-dark"> + </button>
+                        <button type="button" onclick="addPartida()" class="btn btn-dark">+</button>
                     </div>
                     <ul id="lista-partidas" class="small mb-0 list-unstyled"></ul>
                 </div>
-                <button onclick="crearCuenta()" class="btn btn-3d w-100">FINALIZAR Y GENERAR ACCESO</button>
+                <button type="button" onclick="crearCuenta()" class="btn btn-3d w-100">FINALIZAR Y GENERAR ACCESO</button>
             </div>
         </div>
     </div>
 
-    <!-- ═══════════════════════════════════════ ÉXITO ══ -->
+    <!-- ÉXITO -->
     <div id="pantalla-exito" class="row justify-content-center section-hidden">
         <div class="col-md-5 text-center">
             <div class="card card-custom p-4 border-top border-4 border-warning">
                 <h3 class="text-success fw-bold">¡Acceso Correcto!</h3>
                 <p>Tu PIN de acceso operativo es:</p>
-                <h1 id="show-pin" class="display-2 fw-bold text-navy"></h1>
+                <h1 id="show-pin" class="display-2 fw-bold"></h1>
                 <div id="qrcode" class="d-flex justify-content-center my-3"></div>
                 <p class="small text-danger fw-bold">⚠️ Toma captura de pantalla ahora.</p>
-                <button onclick="navegar('pantalla-login')" class="btn btn-dark w-100">CONTINUAR AL LOGIN</button>
+                <button type="button" onclick="navegar('pantalla-login')" class="btn btn-dark w-100">CONTINUAR AL LOGIN</button>
             </div>
         </div>
     </div>
 
-    <!-- ═══════════════════════════════════════ LOGIN ══ -->
+    <!-- LOGIN -->
     <div id="pantalla-login" class="row justify-content-center section-hidden">
         <div class="col-md-4">
             <div class="card card-custom p-4 text-center">
                 <h5 class="fw-bold">Acceso con PIN</h5>
                 <input type="text" id="login-pin" class="form-control form-control-lg text-center fw-bold my-4" maxlength="4" placeholder="0000">
-                <button onclick="validarPin()" class="btn btn-3d w-100">ENTRAR AL DASHBOARD</button>
-                <button onclick="navegar('pantalla-registro')" class="btn btn-link btn-sm mt-3 text-secondary text-decoration-none">Nuevo Beneficiario</button>
+                <button type="button" onclick="validarPin()" class="btn btn-3d w-100">ENTRAR AL DASHBOARD</button>
+                <button type="button" onclick="navegar('pantalla-registro')" class="btn btn-link btn-sm mt-3 text-secondary text-decoration-none">Nuevo Beneficiario</button>
             </div>
         </div>
     </div>
 
-    <!-- ═══════════════════════════════════════ DASHBOARD ══ -->
+    <!-- DASHBOARD -->
     <div id="pantalla-dashboard" class="section-hidden">
         <div class="row">
             <div class="col-md-5">
@@ -129,8 +119,6 @@
                     <div class="mb-1"><span class="badge bg-primary">DISPONIBLE</span></div>
                     <h2 id="dash-saldo" class="fw-bold display-6 mb-4 saldo-ok">$0.00</h2>
                     <div style="height: 220px;"><canvas id="mainChart"></canvas></div>
-
-                    <!-- Resumen por partida (Sugerencia A - vista beneficiario) -->
                     <div id="dash-resumen-partidas" class="mt-3 text-start"></div>
                 </div>
             </div>
@@ -143,50 +131,45 @@
                     <input type="number" id="dash-monto" class="form-control mb-2" placeholder="0.00">
                     <label class="small fw-bold">Link de Evidencia (Drive)</label>
                     <input type="url" id="dash-link" class="form-control mb-3" placeholder="https://drive.google.com/...">
-                    <button onclick="subirGasto()" class="btn btn-3d w-100">ACTUALIZAR SALDO Y REGISTRAR</button>
+                    <button type="button" onclick="subirGasto()" class="btn btn-3d w-100">ACTUALIZAR SALDO Y REGISTRAR</button>
                 </div>
                 <div class="card card-custom p-4">
                     <h6 class="fw-bold mb-3">BITÁCORA DE GASTOS</h6>
                     <div class="table-responsive">
                         <table class="table table-sm table-hover">
                             <thead class="table-light">
-                                <!-- Fecha ahora visible (Bug corregido) -->
-                                <tr class="small text-muted"><th>Partida</th><th>Monto</th><th>Fecha</th><th>Evidencia</th><th></th></tr>
+                                <tr class="small text-muted">
+                                    <th>Partida</th><th>Monto</th><th>Fecha</th><th>Evidencia</th><th></th>
+                                </tr>
                             </thead>
                             <tbody id="tabla-body" class="small"></tbody>
                         </table>
                     </div>
                     <hr>
-                    <button onclick="location.reload()" class="btn btn-outline-danger w-100 fw-bold">CERRAR SESIÓN SEGURA</button>
+                    <button type="button" onclick="location.reload()" class="btn btn-outline-danger w-100 fw-bold">CERRAR SESIÓN SEGURA</button>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- ═══════════════════════════════════════ ADMIN ══ -->
+    <!-- ADMIN -->
     <div id="pantalla-admin" class="section-hidden">
         <div class="card card-custom p-4 shadow-lg">
             <div class="d-flex justify-content-between align-items-center mb-3">
                 <h5 class="fw-bold mb-0">Auditoría Maestra</h5>
                 <div>
-                    <button onclick="abrirModalPassword()" class="btn btn-sm btn-outline-warning me-2">🔑 Cambiar Contraseña</button>
-                    <button onclick="exportarCSV()" class="btn btn-sm btn-outline-success me-2">⬇ Exportar CSV</button>
-                    <button onclick="navegar('pantalla-registro')" class="btn btn-sm btn-secondary">Cerrar</button>
+                    <button type="button" onclick="abrirModalPassword()" class="btn btn-sm btn-outline-warning me-2">🔑 Cambiar Contraseña</button>
+                    <button type="button" onclick="exportarCSV()" class="btn btn-sm btn-outline-success me-2">⬇ Exportar CSV</button>
+                    <button type="button" onclick="navegar('pantalla-registro')" class="btn btn-sm btn-secondary">Cerrar</button>
                 </div>
             </div>
             <div class="table-responsive">
                 <table class="table table-admin align-middle">
                     <thead class="table-dark">
                         <tr>
-                            <th>Beneficiario</th>
-                            <th>PIN</th>
-                            <th>Proyecto</th>
-                            <th>Saldo Inicial</th>
-                            <th>Ejercido</th>
-                            <th>Disponible</th>
-                            <th>Partidas</th>
-                            <th>Estado</th>
-                            <th>Acciones</th>
+                            <th>Beneficiario</th><th>PIN</th><th>Proyecto</th>
+                            <th>Saldo Inicial</th><th>Ejercido</th><th>Disponible</th>
+                            <th>Partidas</th><th>Estado</th><th>Acciones</th>
                         </tr>
                     </thead>
                     <tbody id="admin-table-body"></tbody>
@@ -195,38 +178,38 @@
         </div>
     </div>
 
-</div><!-- /container -->
+</div>
 
-<!-- ══════════════════════════════════ MODAL: CONFIRMAR ELIMINAR GASTO ══ -->
-<div id="modal-eliminar-gasto" class="modal-overlay">
+<!-- MODAL: ELIMINAR GASTO -->
+<div id="modal-eliminar-gasto" class="modal-overlay" onclick="clickFueraModal(event,'modal-eliminar-gasto')">
     <div class="modal-box text-center">
         <div style="font-size:2.5rem;">🗑️</div>
         <h5 class="fw-bold mt-2">¿Eliminar este registro?</h5>
         <p class="small text-muted" id="modal-gasto-detalle">---</p>
         <p class="small text-danger fw-bold">El saldo se recalculará automáticamente.</p>
         <div class="d-flex gap-2 mt-3">
-            <button onclick="cerrarModal('modal-eliminar-gasto')" class="btn btn-outline-secondary w-50">Cancelar</button>
-            <button id="btn-confirmar-eliminar-gasto" class="btn btn-danger w-50 fw-bold">Eliminar</button>
+            <button type="button" onclick="cerrarModal('modal-eliminar-gasto')" class="btn btn-outline-secondary w-50">Cancelar</button>
+            <button type="button" id="btn-confirmar-eliminar-gasto" class="btn btn-danger w-50 fw-bold">Eliminar</button>
         </div>
     </div>
 </div>
 
-
-<div id="modal-eliminar" class="modal-overlay">
+<!-- MODAL: ELIMINAR USUARIO -->
+<div id="modal-eliminar" class="modal-overlay" onclick="clickFueraModal(event,'modal-eliminar')">
     <div class="modal-box text-center">
         <div style="font-size:3rem;">🗑️</div>
         <h5 class="fw-bold mt-2">¿Eliminar este usuario?</h5>
         <p class="small text-muted" id="modal-eliminar-nombre">---</p>
         <p class="small text-danger fw-bold">Esta acción es permanente e irreversible.</p>
         <div class="d-flex gap-2 mt-3">
-            <button onclick="cerrarModal('modal-eliminar')" class="btn btn-outline-secondary w-50">Cancelar</button>
-            <button id="btn-confirmar-eliminar" class="btn btn-danger w-50 fw-bold">Eliminar</button>
+            <button type="button" onclick="cerrarModal('modal-eliminar')" class="btn btn-outline-secondary w-50">Cancelar</button>
+            <button type="button" id="btn-confirmar-eliminar" class="btn btn-danger w-50 fw-bold">Eliminar</button>
         </div>
     </div>
 </div>
 
-<!-- ══════════════════════════════════ MODAL: CAMBIAR PASSWORD ══ -->
-<div id="modal-password" class="modal-overlay">
+<!-- MODAL: CAMBIAR PASSWORD -->
+<div id="modal-password" class="modal-overlay" onclick="clickFueraModal(event,'modal-password')">
     <div class="modal-box">
         <h5 class="fw-bold mb-3 text-center">🔑 Cambiar Contraseña Admin</h5>
         <label class="small fw-bold">Contraseña actual</label>
@@ -237,24 +220,23 @@
         <input type="password" id="pw-confirmar" class="form-control mb-3" placeholder="Repetir nueva contraseña">
         <div id="pw-error" class="alert alert-danger py-2 small section-hidden"></div>
         <div class="d-flex gap-2">
-            <button onclick="cerrarModal('modal-password')" class="btn btn-outline-secondary w-50">Cancelar</button>
-            <button onclick="cambiarPassword()" class="btn btn-warning w-50 fw-bold">Guardar</button>
+            <button type="button" onclick="cerrarModal('modal-password')" class="btn btn-outline-secondary w-50">Cancelar</button>
+            <button type="button" onclick="cambiarPassword()" class="btn btn-warning w-50 fw-bold">Guardar</button>
         </div>
     </div>
 </div>
 
-<!-- ══════════════════════════════════ MODAL: DETALLE PARTIDAS ══ -->
-<div id="modal-detalle" class="modal-overlay">
+<!-- MODAL: DETALLE PARTIDAS -->
+<div id="modal-detalle" class="modal-overlay" onclick="clickFueraModal(event,'modal-detalle')">
     <div class="modal-box">
         <h5 class="fw-bold mb-3" id="modal-detalle-titulo">Detalle por Partida</h5>
         <div id="modal-detalle-body"></div>
-        <button onclick="cerrarModal('modal-detalle')" class="btn btn-dark w-100 mt-3">Cerrar</button>
+        <button type="button" onclick="cerrarModal('modal-detalle')" class="btn btn-dark w-100 mt-3">Cerrar</button>
     </div>
 </div>
 
-<!-- ══════════════════════════════════ SCRIPTS ══ -->
 <script>
-// ── FIREBASE ──────────────────────────────────────────────────
+// FIREBASE
 const firebaseConfig = {
     apiKey: "AIzaSyA1T0OaksBYi9-E9MlIUJvKnoQ2e6uOCx8",
     authDomain: "proyectoemprende26.firebaseapp.com",
@@ -266,103 +248,87 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
 
-// ── ESTADO GLOBAL ─────────────────────────────────────────────
-let v_partidas = [];
-let v_user     = null;
-let v_chart    = null;
-let v_adminPwd = null;          // Contraseña admin cargada desde Firestore
-let v_pinAEliminar = null;      // PIN del usuario pendiente de eliminar
-let v_allUsers = [];            // Cache de usuarios para CSV
+// ESTADO GLOBAL
+let v_partidas     = [];
+let v_user         = null;
+let v_chart        = null;
+let v_adminPwd     = null;
+let v_pinAEliminar = null;
+let v_allUsers     = [];
 
-// ── NAVEGACIÓN ────────────────────────────────────────────────
+// NAVEGACIÓN
 function navegar(id) {
-    const screens = ['pantalla-registro','pantalla-login','pantalla-dashboard','pantalla-admin','pantalla-exito'];
-    screens.forEach(s => { const el = document.getElementById(s); if(el) el.classList.add('section-hidden'); });
+    ['pantalla-registro','pantalla-login','pantalla-dashboard','pantalla-admin','pantalla-exito']
+        .forEach(function(s) { var el = document.getElementById(s); if(el) el.classList.add('section-hidden'); });
     document.getElementById(id).classList.remove('section-hidden');
 }
 
-// ── MODALES ───────────────────────────────────────────────────
+// MODALES
 function abrirModal(id)  { document.getElementById(id).classList.add('active'); }
 function cerrarModal(id) { document.getElementById(id).classList.remove('active'); }
+function clickFueraModal(e, id) { if(e.target === document.getElementById(id)) cerrarModal(id); }
 
-// Cerrar modal al hacer clic fuera
-document.querySelectorAll('.modal-overlay').forEach(overlay => {
-    overlay.addEventListener('click', e => { if(e.target === overlay) overlay.classList.remove('active'); });
-});
-
-// ── PARTIDAS ──────────────────────────────────────────────────
+// PARTIDAS
 function addPartida() {
-    const i = document.getElementById('partida-input');
-    if(i.value.trim()) {
-        const idx = v_partidas.length;
-        v_partidas.push(i.value.trim());
-        const li = document.createElement('li');
-        li.id = `partida-li-${idx}`;
-        li.className = 'd-flex align-items-center justify-content-between mb-1';
-        li.innerHTML = `<span><span class="text-success">✔</span> ${i.value.trim()}</span>
-            <button type="button" onclick="eliminarPartida(${idx})" class="btn btn-sm btn-outline-danger py-0 px-1" title="Eliminar partida">✕</button>`;
-        document.getElementById('lista-partidas').appendChild(li);
-        i.value = '';
-    }
+    var input = document.getElementById('partida-input');
+    var valor = input.value.trim();
+    if(!valor) return;
+    var idx = v_partidas.length;
+    v_partidas.push(valor);
+    var li = document.createElement('li');
+    li.id = 'partida-li-' + idx;
+    li.className = 'd-flex align-items-center justify-content-between mb-1';
+    li.innerHTML = '<span><span class="text-success">✔</span> ' + valor + '</span>'
+        + '<button type="button" onclick="eliminarPartida(' + idx + ')" class="btn btn-sm btn-outline-danger py-0 px-1">✕</button>';
+    document.getElementById('lista-partidas').appendChild(li);
+    input.value = '';
 }
 
 function eliminarPartida(idx) {
-    v_partidas[idx] = null; // marcar como eliminada (mantiene índices de otros botones válidos)
-    const li = document.getElementById(`partida-li-${idx}`);
+    v_partidas[idx] = null;
+    var li = document.getElementById('partida-li-' + idx);
     if(li) li.remove();
 }
 
-// Filtrar nulos al crear cuenta (se aplica en crearCuenta antes de guardar)
-
-// ── CREAR CUENTA ──────────────────────────────────────────────
+// CREAR CUENTA
 async function crearCuenta() {
-    const nom    = document.getElementById('reg-nombre').value.trim();
-    const proy   = document.getElementById('proy-nombre').value.trim();
-    const proyLink = document.getElementById('proy-link').value.trim();
-    const saldo  = parseFloat(document.getElementById('reg-saldo').value) || 13500000;
-
-    const partidasLimpias = v_partidas.filter(p => p !== null);
-    if(!nom || partidasLimpias.length === 0) return alert("Error: Debe ingresar nombre y al menos una partida.");
-
-    const pin = Math.floor(1000 + Math.random() * 9000).toString();
-
+    var nom      = document.getElementById('reg-nombre').value.trim();
+    var proy     = document.getElementById('proy-nombre').value.trim();
+    var proyLink = document.getElementById('proy-link').value.trim();
+    var saldo    = parseFloat(document.getElementById('reg-saldo').value) || 13500000;
+    var partidasLimpias = v_partidas.filter(function(p){ return p !== null; });
+    if(!nom || partidasLimpias.length === 0)
+        return alert("Error: Debe ingresar nombre y al menos una partida.");
+    var pin = Math.floor(1000 + Math.random() * 9000).toString();
     await db.collection("usuarios").doc(pin).set({
-        nombre: nom,
-        proyecto: proy,
-        proyectoLink: proyLink,   // ← Enlace al PDF del proyecto resumido
-        pin: pin,
-        partidas: partidasLimpias,
-        gastos: [],
-        saldoInicial: saldo,   // ← Ahora configurable por usuario
-        bloqueado: false
+        nombre: nom, proyecto: proy, proyectoLink: proyLink,
+        pin: pin, partidas: partidasLimpias, gastos: [],
+        saldoInicial: saldo, bloqueado: false
     });
-
     document.getElementById('show-pin').innerText = pin;
     document.getElementById('qrcode').innerHTML = "";
     new QRCode(document.getElementById("qrcode"), { text: pin, width: 140, height: 140 });
     v_partidas = [];
     document.getElementById('lista-partidas').innerHTML = '';
     document.getElementById('reg-nombre').value  = '';
-    document.getElementById('proy-nombre').value  = '';
-    document.getElementById('proy-link').value    = '';
-    document.getElementById('reg-saldo').value    = '13500000';
+    document.getElementById('proy-nombre').value = '';
+    document.getElementById('proy-link').value   = '';
+    document.getElementById('reg-saldo').value   = '13500000';
     navegar('pantalla-exito');
 }
 
-// ── LOGIN ─────────────────────────────────────────────────────
+// LOGIN
 async function validarPin() {
-    const pinInput = document.getElementById('login-pin').value;
-    const doc = await db.collection("usuarios").doc(pinInput).get();
+    var pinInput = document.getElementById('login-pin').value;
+    var doc = await db.collection("usuarios").doc(pinInput).get();
     if(doc.exists) {
         v_user = doc.data();
         if(v_user.bloqueado) return alert("Acceso bloqueado por el administrador.");
-
         document.getElementById('dash-user-name').innerText = v_user.nombre;
         document.getElementById('dash-proy-name').innerText = v_user.proyecto;
-        const sel = document.getElementById('dash-sel-partida');
+        var sel = document.getElementById('dash-sel-partida');
         sel.innerHTML = '';
-        v_user.partidas.forEach(p => sel.add(new Option(p, p)));
-
+        v_user.partidas.forEach(function(p){ sel.add(new Option(p, p)); });
         actualizarFinanzas();
         navegar('pantalla-dashboard');
     } else {
@@ -370,34 +336,28 @@ async function validarPin() {
     }
 }
 
-// ── SUBIR GASTO ───────────────────────────────────────────────
+// SUBIR GASTO
 async function subirGasto() {
-    const monto   = parseFloat(document.getElementById('dash-monto').value);
-    const partida = document.getElementById('dash-sel-partida').value;
-    const link    = document.getElementById('dash-link').value.trim();
-
+    var monto   = parseFloat(document.getElementById('dash-monto').value);
+    var partida = document.getElementById('dash-sel-partida').value;
+    var link    = document.getElementById('dash-link').value.trim();
     if(!monto || !link) return alert("Por favor complete monto y link de Drive.");
-
-    // Fecha visible (bug corregido)
-    const fecha = new Date().toLocaleDateString('es-MX', { day:'2-digit', month:'2-digit', year:'numeric' });
-
-    v_user.gastos.push({ partida, monto, link, fecha });
+    var fecha = new Date().toLocaleDateString('es-MX', { day:'2-digit', month:'2-digit', year:'numeric' });
+    v_user.gastos.push({ partida: partida, monto: monto, link: link, fecha: fecha });
     await db.collection("usuarios").doc(v_user.pin).update({ gastos: v_user.gastos });
-
     document.getElementById('dash-monto').value = '';
     document.getElementById('dash-link').value  = '';
     actualizarFinanzas();
     alert("Saldo actualizado correctamente.");
 }
 
-// ── MOTOR DE FINANZAS ─────────────────────────────────────────
-// ── ELIMINAR GASTO DE BITÁCORA ────────────────────────────────
+// ELIMINAR GASTO
 function pedirEliminarGasto(idx) {
-    const g = v_user.gastos[idx];
+    var g = v_user.gastos[idx];
     if(!g) return;
     document.getElementById('modal-gasto-detalle').innerText =
-        `${g.partida} — $${g.monto.toLocaleString('es-MX')} — ${g.fecha || ''}`;
-    document.getElementById('btn-confirmar-eliminar-gasto').onclick = async () => {
+        g.partida + ' — $' + g.monto.toLocaleString('es-MX') + ' — ' + (g.fecha || '');
+    document.getElementById('btn-confirmar-eliminar-gasto').onclick = async function() {
         v_user.gastos.splice(idx, 1);
         await db.collection("usuarios").doc(v_user.pin).update({ gastos: v_user.gastos });
         cerrarModal('modal-eliminar-gasto');
@@ -406,64 +366,64 @@ function pedirEliminarGasto(idx) {
     abrirModal('modal-eliminar-gasto');
 }
 
+// MOTOR DE FINANZAS
+function actualizarFinanzas() {
+    var saldoInicial = v_user.saldoInicial || 13500000;
+    var totalGastado = v_user.gastos.reduce(function(acc, obj){ return acc + obj.monto; }, 0);
+    var saldoActual  = saldoInicial - totalGastado;
+    var pct          = totalGastado / saldoInicial;
 
-    const saldoInicial  = v_user.saldoInicial || 13500000;
-    const totalGastado  = v_user.gastos.reduce((acc, obj) => acc + obj.monto, 0);
-    const saldoActual   = saldoInicial - totalGastado;
-    const pct           = totalGastado / saldoInicial;
+    var el = document.getElementById('dash-saldo');
+    el.innerText = '$' + saldoActual.toLocaleString('es-MX', { minimumFractionDigits: 2 });
+    el.className = 'fw-bold display-6 mb-4 ' + (pct >= 0.8 ? 'saldo-warn' : 'saldo-ok');
 
-    // Saldo con color de alerta si supera 80% ejercido
-    const el = document.getElementById('dash-saldo');
-    el.innerText = "$" + saldoActual.toLocaleString('es-MX', { minimumFractionDigits: 2 });
-    el.className = pct >= 0.8 ? 'fw-bold display-6 mb-4 saldo-warn' : 'fw-bold display-6 mb-4 saldo-ok';
-
-    // Tabla bitácora con fecha visible
-    const body = document.getElementById('tabla-body');
+    // Tabla bitácora
+    var body = document.getElementById('tabla-body');
     body.innerHTML = '';
-    v_user.gastos.slice().reverse().forEach((g, iRev) => {
-        const iReal = v_user.gastos.length - 1 - iRev; // índice real en el array original
-        body.innerHTML += `<tr>
-            <td>${g.partida}</td>
-            <td class="fw-bold">$${g.monto.toLocaleString('es-MX')}</td>
-            <td class="text-muted">${g.fecha || '—'}</td>
-            <td><a href="${g.link}" target="_blank" class="btn btn-sm btn-outline-primary py-0">📂</a></td>
-            <td><button onclick="pedirEliminarGasto(${iReal})" class="btn btn-sm btn-outline-danger py-0" title="Eliminar registro">🗑️</button></td>
-        </tr>`;
+    v_user.gastos.slice().reverse().forEach(function(g, iRev) {
+        var iReal = v_user.gastos.length - 1 - iRev;
+        body.innerHTML += '<tr>'
+            + '<td>' + g.partida + '</td>'
+            + '<td class="fw-bold">$' + g.monto.toLocaleString('es-MX') + '</td>'
+            + '<td class="text-muted">' + (g.fecha || '—') + '</td>'
+            + '<td><a href="' + g.link + '" target="_blank" class="btn btn-sm btn-outline-primary py-0">📂</a></td>'
+            + '<td><button type="button" onclick="pedirEliminarGasto(' + iReal + ')" class="btn btn-sm btn-outline-danger py-0" title="Eliminar">🗑️</button></td>'
+            + '</tr>';
     });
 
-    // Resumen por partida (Sugerencia A - vista beneficiario)
-    const resumenEl = document.getElementById('dash-resumen-partidas');
-    const resumen   = {};
-    v_user.gastos.forEach(g => { resumen[g.partida] = (resumen[g.partida] || 0) + g.monto; });
-    resumenEl.innerHTML = Object.keys(resumen).length
-        ? '<p class="small fw-bold text-muted mb-1">Ejercido por partida:</p>' +
-          Object.entries(resumen).map(([p, m]) =>
-            `<div class="d-flex justify-content-between small mb-1">
-                <span>${p}</span>
-                <span class="fw-bold">$${m.toLocaleString('es-MX')}</span>
-             </div>`).join('')
-        : '';
+    // Resumen por partida
+    var resumenEl = document.getElementById('dash-resumen-partidas');
+    var resumen   = {};
+    v_user.gastos.forEach(function(g){ resumen[g.partida] = (resumen[g.partida] || 0) + g.monto; });
+    if(Object.keys(resumen).length) {
+        var html = '<p class="small fw-bold text-muted mb-1">Ejercido por partida:</p>';
+        Object.entries(resumen).forEach(function(entry) {
+            html += '<div class="d-flex justify-content-between small mb-1"><span>' + entry[0] + '</span>'
+                  + '<span class="fw-bold">$' + entry[1].toLocaleString('es-MX') + '</span></div>';
+        });
+        resumenEl.innerHTML = html;
+    } else {
+        resumenEl.innerHTML = '';
+    }
 
-    // Gráfica doughnut
-    const ctx = document.getElementById('mainChart').getContext('2d');
+    // Gráfica
+    var ctx = document.getElementById('mainChart').getContext('2d');
     if(v_chart) v_chart.destroy();
     v_chart = new Chart(ctx, {
         type: 'doughnut',
         data: {
-            labels: ['Disponible', 'Ejercido'],
+            labels: ['Disponible','Ejercido'],
             datasets: [{ data: [saldoActual, totalGastado], backgroundColor: ['#0a192f','#d4af37'], borderWidth: 0 }]
         },
         options: { maintainAspectRatio: false, plugins: { legend: { position: 'bottom' } } }
     });
 }
 
-// ── ADMIN: ACCESO ─────────────────────────────────────────────
+// ADMIN: ACCESO
 async function accesoAdmin() {
-    // Cargar contraseña desde Firestore (o usar default si es la primera vez)
-    const cfgDoc = await db.collection("config").doc("admin").get();
+    var cfgDoc = await db.collection("config").doc("admin").get();
     v_adminPwd = cfgDoc.exists ? cfgDoc.data().password : "Admin100583";
-
-    const input = prompt("Clave Maestra:");
+    var input = prompt("Clave Maestra:");
     if(input === v_adminPwd) {
         navegar('pantalla-admin');
         renderAdmin();
@@ -472,65 +432,52 @@ async function accesoAdmin() {
     }
 }
 
-// ── ADMIN: RENDER TABLA ───────────────────────────────────────
+// ADMIN: RENDER TABLA
 async function renderAdmin() {
-    const snap = await db.collection("usuarios").get();
-    const tbody = document.getElementById('admin-table-body');
+    var snap = await db.collection("usuarios").get();
+    var tbody = document.getElementById('admin-table-body');
     tbody.innerHTML = '';
     v_allUsers = [];
-
-    snap.forEach(doc => {
-        const u = doc.data();
+    snap.forEach(function(doc) {
+        var u = doc.data();
         v_allUsers.push(u);
-        const saldoInicial = u.saldoInicial || 13500000;
-        const ejercido     = (u.gastos || []).reduce((a, g) => a + g.monto, 0);
-        const disponible   = saldoInicial - ejercido;
-
-        // Badges de partidas
-        const partidasBadges = (u.partidas || []).map(p => `<span class="partida-badge">${p}</span>`).join('');
-
-        tbody.innerHTML += `
-            <tr class="align-middle">
-                <td><strong>${u.nombre}</strong></td>
-                <td><code class="fs-6">${u.pin}</code></td>
-                <td>${u.proyecto}${u.proyectoLink ? ` <a href="${u.proyectoLink}" target="_blank" class="btn btn-sm btn-outline-secondary py-0 ms-1" title="Ver PDF">📄</a>` : ''}</td>
-                <td class="text-end">$${saldoInicial.toLocaleString('es-MX')}</td>
-                <td class="text-end fw-bold text-warning">$${ejercido.toLocaleString('es-MX')}</td>
-                <td class="text-end fw-bold ${disponible < saldoInicial * 0.2 ? 'text-danger' : 'text-success'}">
-                    $${disponible.toLocaleString('es-MX')}
-                </td>
-                <td>
-                    ${partidasBadges}
-                    <button onclick="verDetallePartidas('${u.pin}')" class="btn btn-sm btn-outline-dark mt-1 py-0">
-                        📊 Detalle
-                    </button>
-                </td>
-                <td><span class="badge ${u.bloqueado ? 'bg-danger' : 'bg-success'}">${u.bloqueado ? 'Bloqueado' : 'Activo'}</span></td>
-                <td>
-                    <div class="d-flex gap-1">
-                        <button onclick="toggleU('${u.pin}', ${u.bloqueado})" class="btn btn-sm btn-dark">
-                            ${u.bloqueado ? '✅' : '🔒'}
-                        </button>
-                        <button onclick="pedirEliminar('${u.pin}', '${u.nombre.replace(/'/g,"\\'")}', '${u.proyecto.replace(/'/g,"\\'")}' )" class="btn btn-sm btn-danger">
-                            🗑️
-                        </button>
-                    </div>
-                </td>
-            </tr>`;
+        var saldoInicial = u.saldoInicial || 13500000;
+        var ejercido     = (u.gastos || []).reduce(function(a,g){ return a + g.monto; }, 0);
+        var disponible   = saldoInicial - ejercido;
+        var partidasBadges = (u.partidas || []).map(function(p){
+            return '<span class="partida-badge">' + p + '</span>';
+        }).join('');
+        var linkPDF = u.proyectoLink
+            ? ' <a href="' + u.proyectoLink + '" target="_blank" class="btn btn-sm btn-outline-secondary py-0 ms-1" title="Ver PDF">📄</a>'
+            : '';
+        tbody.innerHTML += '<tr class="align-middle">'
+            + '<td><strong>' + u.nombre + '</strong></td>'
+            + '<td><code class="fs-6">' + u.pin + '</code></td>'
+            + '<td>' + u.proyecto + linkPDF + '</td>'
+            + '<td class="text-end">$' + saldoInicial.toLocaleString('es-MX') + '</td>'
+            + '<td class="text-end fw-bold text-warning">$' + ejercido.toLocaleString('es-MX') + '</td>'
+            + '<td class="text-end fw-bold ' + (disponible < saldoInicial * 0.2 ? 'text-danger' : 'text-success') + '">$' + disponible.toLocaleString('es-MX') + '</td>'
+            + '<td>' + partidasBadges
+            +   '<button type="button" onclick="verDetallePartidas(\'' + u.pin + '\')" class="btn btn-sm btn-outline-dark mt-1 py-0">📊 Detalle</button></td>'
+            + '<td><span class="badge ' + (u.bloqueado ? 'bg-danger' : 'bg-success') + '">' + (u.bloqueado ? 'Bloqueado' : 'Activo') + '</span></td>'
+            + '<td><div class="d-flex gap-1">'
+            +   '<button type="button" onclick="toggleU(\'' + u.pin + '\',' + u.bloqueado + ')" class="btn btn-sm btn-dark">' + (u.bloqueado ? '✅' : '🔒') + '</button>'
+            +   '<button type="button" onclick="pedirEliminar(\'' + u.pin + '\',\'' + u.nombre.replace(/'/g,"\\'") + '\',\'' + u.proyecto.replace(/'/g,"\\'") + '\')" class="btn btn-sm btn-danger">🗑️</button>'
+            + '</div></td></tr>';
     });
 }
 
-// ── ADMIN: BLOQUEAR / DESBLOQUEAR ─────────────────────────────
+// ADMIN: BLOQUEAR/DESBLOQUEAR
 async function toggleU(p, s) {
     await db.collection("usuarios").doc(p).update({ bloqueado: !s });
     renderAdmin();
 }
 
-// ── ADMIN: ELIMINAR USUARIO ───────────────────────────────────
+// ADMIN: ELIMINAR USUARIO
 function pedirEliminar(pin, nombre, proyecto) {
     v_pinAEliminar = pin;
-    document.getElementById('modal-eliminar-nombre').innerText = `${nombre} — ${proyecto}`;
-    document.getElementById('btn-confirmar-eliminar').onclick = async () => {
+    document.getElementById('modal-eliminar-nombre').innerText = nombre + ' — ' + proyecto;
+    document.getElementById('btn-confirmar-eliminar').onclick = async function() {
         await db.collection("usuarios").doc(v_pinAEliminar).delete();
         cerrarModal('modal-eliminar');
         v_pinAEliminar = null;
@@ -539,69 +486,54 @@ function pedirEliminar(pin, nombre, proyecto) {
     abrirModal('modal-eliminar');
 }
 
-// ── ADMIN: DETALLE PARTIDAS (Sugerencia A) ────────────────────
+// ADMIN: DETALLE PARTIDAS
 function verDetallePartidas(pin) {
-    const u = v_allUsers.find(x => x.pin === pin);
+    var u = v_allUsers.find(function(x){ return x.pin === pin; });
     if(!u) return;
-
-    const saldoInicial = u.saldoInicial || 13500000;
-    const resumen = {};
-    (u.partidas || []).forEach(p => resumen[p] = 0);
-    (u.gastos || []).forEach(g => { resumen[g.partida] = (resumen[g.partida] || 0) + g.monto; });
-
-    document.getElementById('modal-detalle-titulo').innerText = `📊 ${u.nombre} — ${u.proyecto}`;
-    document.getElementById('modal-detalle-body').innerHTML =
-        `<p class="small text-muted mb-2">Saldo Inicial: <strong>$${saldoInicial.toLocaleString('es-MX')}</strong></p>` +
-        Object.entries(resumen).map(([p, m]) => {
-            const pct = saldoInicial > 0 ? Math.min(100, (m / saldoInicial) * 100) : 0;
-            return `
-                <div class="mb-2">
-                    <div class="d-flex justify-content-between small">
-                        <span>${p}</span>
-                        <span class="fw-bold">$${m.toLocaleString('es-MX')}</span>
-                    </div>
-                    <div class="progress" style="height:6px">
-                        <div class="progress-bar bg-warning" style="width:${pct}%"></div>
-                    </div>
-                </div>`;
-        }).join('') +
-        `<hr><div class="d-flex justify-content-between small fw-bold">
-            <span>Total ejercido</span>
-            <span>$${Object.values(resumen).reduce((a,b)=>a+b,0).toLocaleString('es-MX')}</span>
-         </div>`;
-
+    var saldoInicial = u.saldoInicial || 13500000;
+    var resumen = {};
+    (u.partidas || []).forEach(function(p){ resumen[p] = 0; });
+    (u.gastos   || []).forEach(function(g){ resumen[g.partida] = (resumen[g.partida] || 0) + g.monto; });
+    document.getElementById('modal-detalle-titulo').innerText = '📊 ' + u.nombre + ' — ' + u.proyecto;
+    var html = '<p class="small text-muted mb-2">Saldo Inicial: <strong>$' + saldoInicial.toLocaleString('es-MX') + '</strong></p>';
+    Object.entries(resumen).forEach(function(entry) {
+        var pct = saldoInicial > 0 ? Math.min(100, (entry[1] / saldoInicial) * 100) : 0;
+        html += '<div class="mb-2"><div class="d-flex justify-content-between small"><span>' + entry[0] + '</span>'
+              + '<span class="fw-bold">$' + entry[1].toLocaleString('es-MX') + '</span></div>'
+              + '<div class="progress" style="height:6px"><div class="progress-bar bg-warning" style="width:' + pct + '%"></div></div></div>';
+    });
+    var totalEjercido = Object.values(resumen).reduce(function(a,b){ return a+b; }, 0);
+    html += '<hr><div class="d-flex justify-content-between small fw-bold"><span>Total ejercido</span><span>$' + totalEjercido.toLocaleString('es-MX') + '</span></div>';
+    document.getElementById('modal-detalle-body').innerHTML = html;
     abrirModal('modal-detalle');
 }
 
-// ── ADMIN: EXPORTAR CSV (Sugerencia B) ────────────────────────
+// ADMIN: EXPORTAR CSV
 function exportarCSV() {
     if(!v_allUsers.length) return alert("No hay datos cargados.");
-
-    let csv = "Beneficiario,PIN,Proyecto,Saldo Inicial,Total Ejercido,Disponible,Partida,Monto,Fecha,Link\n";
-    v_allUsers.forEach(u => {
-        const saldoInicial = u.saldoInicial || 13500000;
-        const ejercido     = (u.gastos||[]).reduce((a,g)=>a+g.monto,0);
-        const disponible   = saldoInicial - ejercido;
-
-        if((u.gastos||[]).length === 0) {
-            csv += `"${u.nombre}","${u.pin}","${u.proyecto}",${saldoInicial},${ejercido},${disponible},"—","—","—","—"\n`;
+    var csv = "Beneficiario,PIN,Proyecto,Saldo Inicial,Total Ejercido,Disponible,Partida,Monto,Fecha,Link\n";
+    v_allUsers.forEach(function(u) {
+        var saldoInicial = u.saldoInicial || 13500000;
+        var ejercido     = (u.gastos||[]).reduce(function(a,g){ return a+g.monto; }, 0);
+        var disponible   = saldoInicial - ejercido;
+        if(!(u.gastos||[]).length) {
+            csv += '"' + u.nombre + '","' + u.pin + '","' + u.proyecto + '",' + saldoInicial + ',' + ejercido + ',' + disponible + ',"—","—","—","—"\n';
         } else {
-            u.gastos.forEach(g => {
-                csv += `"${u.nombre}","${u.pin}","${u.proyecto}",${saldoInicial},${ejercido},${disponible},"${g.partida}",${g.monto},"${g.fecha||''}","${g.link}"\n`;
+            u.gastos.forEach(function(g) {
+                csv += '"' + u.nombre + '","' + u.pin + '","' + u.proyecto + '",' + saldoInicial + ',' + ejercido + ',' + disponible + ',"' + g.partida + '",' + g.monto + ',"' + (g.fecha||'') + '","' + g.link + '"\n';
             });
         }
     });
-
-    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-    const url  = URL.createObjectURL(blob);
-    const a    = document.createElement('a');
-    a.href     = url;
-    a.download = `FondeoEmprende_Auditoria_${new Date().toISOString().slice(0,10)}.csv`;
+    var blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    var url  = URL.createObjectURL(blob);
+    var a    = document.createElement('a');
+    a.href = url;
+    a.download = 'FondeoEmprende_Auditoria_' + new Date().toISOString().slice(0,10) + '.csv';
     a.click();
     URL.revokeObjectURL(url);
 }
 
-// ── ADMIN: CAMBIAR PASSWORD (Sugerencia actualización pwd) ────
+// ADMIN: CAMBIAR PASSWORD
 function abrirModalPassword() {
     document.getElementById('pw-actual').value    = '';
     document.getElementById('pw-nueva').value     = '';
@@ -611,20 +543,14 @@ function abrirModalPassword() {
 }
 
 async function cambiarPassword() {
-    const actual    = document.getElementById('pw-actual').value;
-    const nueva     = document.getElementById('pw-nueva').value;
-    const confirmar = document.getElementById('pw-confirmar').value;
-    const errEl     = document.getElementById('pw-error');
-
-    const mostrarError = (msg) => {
-        errEl.innerText = msg;
-        errEl.classList.remove('section-hidden');
-    };
-
-    if(actual !== v_adminPwd)   return mostrarError("La contraseña actual no es correcta.");
-    if(nueva.length < 8)        return mostrarError("La nueva contraseña debe tener mínimo 8 caracteres.");
-    if(nueva !== confirmar)     return mostrarError("Las contraseñas nuevas no coinciden.");
-
+    var actual    = document.getElementById('pw-actual').value;
+    var nueva     = document.getElementById('pw-nueva').value;
+    var confirmar = document.getElementById('pw-confirmar').value;
+    var errEl     = document.getElementById('pw-error');
+    function mostrarError(msg) { errEl.innerText = msg; errEl.classList.remove('section-hidden'); }
+    if(actual !== v_adminPwd)  return mostrarError("La contraseña actual no es correcta.");
+    if(nueva.length < 8)       return mostrarError("La nueva contraseña debe tener mínimo 8 caracteres.");
+    if(nueva !== confirmar)    return mostrarError("Las contraseñas nuevas no coinciden.");
     await db.collection("config").doc("admin").set({ password: nueva });
     v_adminPwd = nueva;
     cerrarModal('modal-password');

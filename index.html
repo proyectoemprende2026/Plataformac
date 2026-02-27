@@ -236,25 +236,28 @@
 </div>
 
 <script>
-// FIREBASE
-const firebaseConfig = {
-    apiKey: "AIzaSyA1T0OaksBYi9-E9MlIUJvKnoQ2e6uOCx8",
-    authDomain: "proyectoemprende26.firebaseapp.com",
-    projectId: "proyectoemprende26",
-    storageBucket: "proyectoemprende26.firebasestorage.app",
-    messagingSenderId: "57446946914",
-    appId: "1:57446946914:web:cf9ff716e038b866d8193b"
-};
-firebase.initializeApp(firebaseConfig);
-const db = firebase.firestore();
-
 // ESTADO GLOBAL
-let v_partidas     = [];
-let v_user         = null;
-let v_chart        = null;
-let v_adminPwd     = null;
-let v_pinAEliminar = null;
-let v_allUsers     = [];
+var db;
+var v_partidas     = [];
+var v_user         = null;
+var v_chart        = null;
+var v_adminPwd     = null;
+var v_pinAEliminar = null;
+var v_allUsers     = [];
+
+// FIREBASE — inicializa cuando todos los SDKs están listos
+window.addEventListener('load', function() {
+    var firebaseConfig = {
+        apiKey: "AIzaSyA1T0OaksBYi9-E9MlIUJvKnoQ2e6uOCx8",
+        authDomain: "proyectoemprende26.firebaseapp.com",
+        projectId: "proyectoemprende26",
+        storageBucket: "proyectoemprende26.firebasestorage.app",
+        messagingSenderId: "57446946914",
+        appId: "1:57446946914:web:cf9ff716e038b866d8193b"
+    };
+    firebase.initializeApp(firebaseConfig);
+    db = firebase.firestore();
+});
 
 // NAVEGACIÓN
 function navegar(id) {

@@ -70,6 +70,8 @@
                 <h4 class="fw-bold text-center mb-4">Alta de Beneficiario</h4>
                 <input type="text" id="reg-nombre" class="form-control mb-2" placeholder="Nombre completo">
                 <input type="text" id="proy-nombre" class="form-control mb-2" placeholder="Nombre del proyecto">
+                <label class="small fw-bold">Proyecto resumido</label>
+                <input type="url" id="proy-link" class="form-control mb-2" placeholder="https://drive.google.com/... (PDF del proyecto)">
 
                 <!-- Saldo inicial configurable (Sugerencia C) -->
                 <div class="input-group mb-3">
@@ -288,6 +290,7 @@ function addPartida() {
 async function crearCuenta() {
     const nom    = document.getElementById('reg-nombre').value.trim();
     const proy   = document.getElementById('proy-nombre').value.trim();
+    const proyLink = document.getElementById('proy-link').value.trim();
     const saldo  = parseFloat(document.getElementById('reg-saldo').value) || 13500000;
 
     if(!nom || v_partidas.length === 0) return alert("Error: Debe ingresar nombre y al menos una partida.");
@@ -297,6 +300,7 @@ async function crearCuenta() {
     await db.collection("usuarios").doc(pin).set({
         nombre: nom,
         proyecto: proy,
+        proyectoLink: proyLink,   // ← Enlace al PDF del proyecto resumido
         pin: pin,
         partidas: v_partidas,
         gastos: [],
@@ -309,9 +313,10 @@ async function crearCuenta() {
     new QRCode(document.getElementById("qrcode"), { text: pin, width: 140, height: 140 });
     v_partidas = [];
     document.getElementById('lista-partidas').innerHTML = '';
-    document.getElementById('reg-nombre').value = '';
-    document.getElementById('proy-nombre').value = '';
-    document.getElementById('reg-saldo').value = '13500000';
+    document.getElementById('reg-nombre').value  = '';
+    document.getElementById('proy-nombre').value  = '';
+    document.getElementById('proy-link').value    = '';
+    document.getElementById('reg-saldo').value    = '13500000';
     navegar('pantalla-exito');
 }
 
@@ -442,7 +447,7 @@ async function renderAdmin() {
             <tr class="align-middle">
                 <td><strong>${u.nombre}</strong></td>
                 <td><code class="fs-6">${u.pin}</code></td>
-                <td>${u.proyecto}</td>
+                <td>${u.proyecto}${u.proyectoLink ? ` <a href="${u.proyectoLink}" target="_blank" class="btn btn-sm btn-outline-secondary py-0 ms-1" title="Ver PDF">📄</a>` : ''}</td>
                 <td class="text-end">$${saldoInicial.toLocaleString('es-MX')}</td>
                 <td class="text-end fw-bold text-warning">$${ejercido.toLocaleString('es-MX')}</td>
                 <td class="text-end fw-bold ${disponible < saldoInicial * 0.2 ? 'text-danger' : 'text-success'}">

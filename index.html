@@ -151,7 +151,7 @@
                         <table class="table table-sm table-hover">
                             <thead class="table-light">
                                 <!-- Fecha ahora visible (Bug corregido) -->
-                                <tr class="small text-muted"><th>Partida</th><th>Monto</th><th>Fecha</th><th>Evidencia</th></tr>
+                                <tr class="small text-muted"><th>Partida</th><th>Monto</th><th>Fecha</th><th>Evidencia</th><th></th></tr>
                             </thead>
                             <tbody id="tabla-body" class="small"></tbody>
                         </table>
@@ -197,7 +197,21 @@
 
 </div><!-- /container -->
 
-<!-- ══════════════════════════════════ MODAL: CONFIRMAR ELIMINAR ══ -->
+<!-- ══════════════════════════════════ MODAL: CONFIRMAR ELIMINAR GASTO ══ -->
+<div id="modal-eliminar-gasto" class="modal-overlay">
+    <div class="modal-box text-center">
+        <div style="font-size:2.5rem;">🗑️</div>
+        <h5 class="fw-bold mt-2">¿Eliminar este registro?</h5>
+        <p class="small text-muted" id="modal-gasto-detalle">---</p>
+        <p class="small text-danger fw-bold">El saldo se recalculará automáticamente.</p>
+        <div class="d-flex gap-2 mt-3">
+            <button onclick="cerrarModal('modal-eliminar-gasto')" class="btn btn-outline-secondary w-50">Cancelar</button>
+            <button id="btn-confirmar-eliminar-gasto" class="btn btn-danger w-50 fw-bold">Eliminar</button>
+        </div>
+    </div>
+</div>
+
+
 <div id="modal-eliminar" class="modal-overlay">
     <div class="modal-box text-center">
         <div style="font-size:3rem;">🗑️</div>
@@ -280,11 +294,25 @@ document.querySelectorAll('.modal-overlay').forEach(overlay => {
 function addPartida() {
     const i = document.getElementById('partida-input');
     if(i.value.trim()) {
+        const idx = v_partidas.length;
         v_partidas.push(i.value.trim());
-        document.getElementById('lista-partidas').innerHTML += `<li><span class="text-success">✔</span> ${i.value.trim()}</li>`;
+        const li = document.createElement('li');
+        li.id = `partida-li-${idx}`;
+        li.className = 'd-flex align-items-center justify-content-between mb-1';
+        li.innerHTML = `<span><span class="text-success">✔</span> ${i.value.trim()}</span>
+            <button onclick="eliminarPartida(${idx})" class="btn btn-sm btn-outline-danger py-0 px-1" title="Eliminar partida">✕</button>`;
+        document.getElementById('lista-partidas').appendChild(li);
         i.value = '';
     }
 }
+
+function eliminarPartida(idx) {
+    v_partidas[idx] = null; // marcar como eliminada (mantiene índices de otros botones válidos)
+    const li = document.getElementById(`partida-li-${idx}`);
+    if(li) li.remove();
+}
+
+// Filtrar nulos al crear cuenta (se aplica en crearCuenta antes de guardar)
 
 // ── CREAR CUENTA ──────────────────────────────────────────────
 async function crearCuenta() {
@@ -293,7 +321,8 @@ async function crearCuenta() {
     const proyLink = document.getElementById('proy-link').value.trim();
     const saldo  = parseFloat(document.getElementById('reg-saldo').value) || 13500000;
 
-    if(!nom || v_partidas.length === 0) return alert("Error: Debe ingresar nombre y al menos una partida.");
+    const partidasLimpias = v_partidas.filter(p => p !== null);
+    if(!nom || partidasLimpias.length === 0) return alert("Error: Debe ingresar nombre y al menos una partida.");
 
     const pin = Math.floor(1000 + Math.random() * 9000).toString();
 
@@ -302,7 +331,7 @@ async function crearCuenta() {
         proyecto: proy,
         proyectoLink: proyLink,   // ← Enlace al PDF del proyecto resumido
         pin: pin,
-        partidas: v_partidas,
+        partidas: partidasLimpias,
         gastos: [],
         saldoInicial: saldo,   // ← Ahora configurable por usuario
         bloqueado: false
@@ -362,7 +391,22 @@ async function subirGasto() {
 }
 
 // ── MOTOR DE FINANZAS ─────────────────────────────────────────
-function actualizarFinanzas() {
+// ── ELIMINAR GASTO DE BITÁCORA ────────────────────────────────
+function pedirEliminarGasto(idx) {
+    const g = v_user.gastos[idx];
+    if(!g) return;
+    document.getElementById('modal-gasto-detalle').innerText =
+        `${g.partida} — $${g.monto.toLocaleString('es-MX')} — ${g.fecha || ''}`;
+    document.getElementById('btn-confirmar-eliminar-gasto').onclick = async () => {
+        v_user.gastos.splice(idx, 1);
+        await db.collection("usuarios").doc(v_user.pin).update({ gastos: v_user.gastos });
+        cerrarModal('modal-eliminar-gasto');
+        actualizarFinanzas();
+    };
+    abrirModal('modal-eliminar-gasto');
+}
+
+
     const saldoInicial  = v_user.saldoInicial || 13500000;
     const totalGastado  = v_user.gastos.reduce((acc, obj) => acc + obj.monto, 0);
     const saldoActual   = saldoInicial - totalGastado;
@@ -376,12 +420,14 @@ function actualizarFinanzas() {
     // Tabla bitácora con fecha visible
     const body = document.getElementById('tabla-body');
     body.innerHTML = '';
-    v_user.gastos.slice().reverse().forEach(g => {
+    v_user.gastos.slice().reverse().forEach((g, iRev) => {
+        const iReal = v_user.gastos.length - 1 - iRev; // índice real en el array original
         body.innerHTML += `<tr>
             <td>${g.partida}</td>
             <td class="fw-bold">$${g.monto.toLocaleString('es-MX')}</td>
             <td class="text-muted">${g.fecha || '—'}</td>
             <td><a href="${g.link}" target="_blank" class="btn btn-sm btn-outline-primary py-0">📂</a></td>
+            <td><button onclick="pedirEliminarGasto(${iReal})" class="btn btn-sm btn-outline-danger py-0" title="Eliminar registro">🗑️</button></td>
         </tr>`;
     });
 
